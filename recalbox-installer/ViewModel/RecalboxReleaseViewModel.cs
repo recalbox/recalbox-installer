@@ -7,22 +7,35 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Octokit;
 using recalbox_installer.Annotations;
 using recalbox_installer.Model;
+
 
 namespace recalbox_installer.ViewModel
 {
     class RecalboxReleaseViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<RecalboxRelease> _observableCollectionRecalbox; 
+        private ObservableCollection<Release> _observableCollectionRecalbox;
+        private List<Release> _releases;
 
         public RecalboxReleaseViewModel()
         {
-            getReleaseFromGithub(@"https://api.github.com/repos/digitalLumberjack/recalbox-os/releases");
+            GetReleaseFromGithub();
         }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public ObservableCollection<Release> RecalboxRelease
+        {
+            get { return _observableCollectionRecalbox; }
+            set
+            {
+                _observableCollectionRecalbox = value;
+                OnPropertyChanged();
+            }
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -30,16 +43,26 @@ namespace recalbox_installer.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void getReleaseFromGithub(string githubLink)
+        private void GetReleaseFromGithub()
         {
-            using (WebClient client = new WebClient())
-            {
-                client.Headers[HttpRequestHeader.Accept] = "application/json";
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                var json = client.DownloadString(githubLink);
-
-            }
+            var client = new GitHubClient(new ProductHeaderValue("recalboxInstaller"));
+            var releases = client.Release.GetAll("digitalLumberjack", "recalbox-os").GetAwaiter().GetResult();
+            //client.Release.GetAll("digitalLumberjack", "recalbox-os") += new Task<IReadOnlyList<Release>>(UpdateListRelease
+            _releases = new List<Release>(releases);
+            UpdateListRelease(false);
 
         }
+
+        public void UpdateListRelease(bool beta)
+        {
+            foreach (var release in _releases)
+            {
+                if((release.Prerelease && beta) || (!release.Prerelease))
+                    RecalboxRelease.Add(release);
+            }
+            
+        }
+
+       
     }
 }

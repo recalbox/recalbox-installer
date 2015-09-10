@@ -31,7 +31,7 @@ namespace recalbox_installer.ViewModel
             set
             {
                 _observableCollectionDriveLetter = value;
-                OnPropertyChanged("DriveLetter");
+                OnPropertyChanged();
             }
         }
 
