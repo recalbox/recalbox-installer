@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace recalbox_installer
+namespace recalbox_installer.Model
 {
     public class DriveManager
     {
@@ -20,8 +18,9 @@ namespace recalbox_installer
 
                 foreach (DriveInfo d in allDrives)
                 {
-                    if (d.IsReady == true)
+                    if (d.IsReady && d.VolumeLabel != "OS")
                     {
+                        
                         string ko = d.VolumeLabel;
                         string dt = System.Convert.ToString(d.DriveType);
                         //  comboBox1.Items.Add(d.Name.Remove(2));
