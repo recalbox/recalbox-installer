@@ -23,6 +23,11 @@ namespace recalbox_installer
         public MainWindow()
         {
             InitializeComponent();
+            // todo to remove only for test
+            foreach (var VARIABLE in DriveManager.GetAllDrive())
+            {
+                comboBoxDriveLetter.Items.Add(VARIABLE);
+            }
         }
     }
 }

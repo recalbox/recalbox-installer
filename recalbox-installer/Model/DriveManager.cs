@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,9 @@ namespace recalbox_installer
 {
     public class DriveManager
     {
-
-
-        public static void GetAllDrive()
+        public static List<string> GetAllDrive()
         {
+            List<string> listDriveLetter = new List<string>();
             try
             {
                 DriveInfo[] allDrives = DriveInfo.GetDrives();
@@ -24,12 +24,14 @@ namespace recalbox_installer
                     {
                         string ko = d.VolumeLabel;
                         string dt = System.Convert.ToString(d.DriveType);
-                        comboBox1.Items.Add(d.Name.Remove(2));
+                        //  comboBox1.Items.Add(d.Name.Remove(2));
+                        listDriveLetter.Add(d.Name.Remove(2));
                     }
 
                 }
             }
             catch {/* MessageBox.Show("Error Fetching Drive Info", "Error");*/ }
+            return listDriveLetter;
         }
 
 
@@ -147,7 +149,7 @@ namespace recalbox_installer
 
         #endregion
 
-        #region FormatDrive_Shell32
+ 
 
         #region interop
 
