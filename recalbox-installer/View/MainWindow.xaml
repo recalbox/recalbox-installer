@@ -18,9 +18,9 @@
             <TextBlock x:Name="textBlockStepOne" Margin="10,0" TextWrapping="Wrap" Text="STEP 1 : Choose a version" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
             <ComboBox x:Name="comboBoxReleases" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding RecalboxRelease}"  SelectedIndex="0" />
             <CheckBox x:Name="checkBoxBeta" Content="Beta versions" HorizontalAlignment="Left" Margin="135,35,0,0" VerticalAlignment="Top" Height="22" Foreground="White" Click="checkBoxBeta_Click"/>
-            <TextBox x:Name="textBoxFileDir" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+            <TextBox x:Name="textBoxFileDir" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120"/>
             <TextBlock x:Name="textBlockStepOneBis" Margin="10,62,10,0" TextWrapping="Wrap" Text=" or select zip" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <Button x:Name="buttonSelectFile" Content="Select file" HorizontalAlignment="Left" Margin="135,97,0,0" VerticalAlignment="Top" Width="90" Height="23"/>
+            <Button x:Name="buttonSelectFile" Content="Select file" HorizontalAlignment="Left" Margin="135,97,0,0" VerticalAlignment="Top" Width="90" Height="23" Click="buttonSelectFile_Click"/>
         </Grid>
         <Grid x:Name="GridStepTwo" Height="70" Margin="0,212,0,0" VerticalAlignment="Top">
             <TextBlock x:Name="textBlockStepTwo" Margin="10,0" TextWrapping="Wrap" Text="STEP 2 : Choose SD Card Device" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
@@ -29,7 +29,9 @@
         </Grid>
         <Grid Height="253" VerticalAlignment="Top" Margin="0,287,0,0">
             <TextBlock x:Name="textBlockStepThree" Margin="10,10,10,0" TextWrapping="Wrap" Text="STEP 3 : Launch and wait" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <Button x:Name="buttonStart" Content="START" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Width="497" Height="35"/>
+            <Button x:Name="buttonStart" Content="START" Margin="10,45,10,0" VerticalAlignment="Top" Height="35" Click="buttonStart_Click"/>
+            <ProgressBar x:Name="progressBarDownload" Height="28" Margin="10,85,10,0" VerticalAlignment="Top"/>
+
         </Grid>
 
 

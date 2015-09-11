@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Octokit;
 using recalbox_installer.Annotations;
 using recalbox_installer.Model;
@@ -18,6 +20,7 @@ namespace recalbox_installer.ViewModel
     {
         private ObservableCollection<string> _observableCollectionRecalbox;
         private List<Release> _releases;
+        private string _downloadLink;
 
         public RecalboxReleaseViewModel()
         {
@@ -38,6 +41,12 @@ namespace recalbox_installer.ViewModel
             }
         }
 
+        public string DownloadLink
+        {
+            get { return _downloadLink; }
+            set { _downloadLink = value; }
+        }
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -47,20 +56,6 @@ namespace recalbox_installer.ViewModel
         private async void GetReleaseFromGithub()
         {
 
-            // Work but dirty...
-            /*
-            using (WebClient client = new WebClient())
-            {
-                client.Headers[HttpRequestHeader.UserAgent] = "recalboxInstaller";
-                client.Headers[HttpRequestHeader.Accept] = "application/json";
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                var json = client.DownloadString(@"https://api.github.com/repos/digitalLumberjack/recalbox-os/releases");
-                var test = json;
-             
-            }*/
-
-
-            // Don't work but I follow doc
             var client = new GitHubClient(new ProductHeaderValue("recalboxInstaller"));
             var releases = await client.Release.GetAll("digitalLumberjack", "recalbox-os");
             _releases = new List<Release>(releases);
@@ -71,7 +66,6 @@ namespace recalbox_installer.ViewModel
 
         public void UpdateListRelease(bool beta)
         {
-
             RecalboxRelease = new ObservableCollection<string>();
             foreach (var release in _releases)
             {
@@ -80,10 +74,28 @@ namespace recalbox_installer.ViewModel
                     RecalboxRelease.Add(release.Name);
                 }
                    
-            }
-            
+            }   
         }
 
-       
+        public async Task GetUrlWithVersionName(string vName)
+        {
+            Release release;
+            List<ReleaseAsset> releaseAssets = new List<ReleaseAsset>();
+
+            release = _releases.Find(x => x.Name == vName);
+
+            var client = new GitHubClient(new ProductHeaderValue("recalboxInstaller"));
+            var assets = await client.Release.GetAllAssets("digitalLumberjack", "recalbox-os", release.Id); //GetAsset("digitalLumberjack", "recalbox-os", release.Id);
+
+            foreach (var releaseAsset in assets)
+            {
+                if (releaseAsset.Name.Contains(".zip"))
+                {
+                    _downloadLink = releaseAsset.BrowserDownloadUrl;
+                    break;
+                }
+            }
+        }
+
     }
 }
