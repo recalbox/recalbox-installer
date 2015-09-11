@@ -16,18 +16,19 @@ namespace recalbox_installer.ViewModel
 {
     class RecalboxReleaseViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<Release> _observableCollectionRecalbox;
+        private ObservableCollection<string> _observableCollectionRecalbox;
         private List<Release> _releases;
 
         public RecalboxReleaseViewModel()
         {
+            _observableCollectionRecalbox = new ObservableCollection<string>();
             GetReleaseFromGithub();
         }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Release> RecalboxRelease
+        public ObservableCollection<string> RecalboxRelease
         {
             get { return _observableCollectionRecalbox; }
             set
@@ -43,7 +44,7 @@ namespace recalbox_installer.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void GetReleaseFromGithub()
+        private async void GetReleaseFromGithub()
         {
 
             // Work but dirty...
@@ -57,23 +58,28 @@ namespace recalbox_installer.ViewModel
                 var test = json;
              
             }*/
-         
+
 
             // Don't work but I follow doc
             var client = new GitHubClient(new ProductHeaderValue("recalboxInstaller"));
-            var releases = client.Release.GetAll("digitalLumberjack", "recalbox-os").Result;
+            var releases = await client.Release.GetAll("digitalLumberjack", "recalbox-os");
             _releases = new List<Release>(releases);
-            
+
             UpdateListRelease(false);
 
         }
 
         public void UpdateListRelease(bool beta)
         {
+            RecalboxRelease = null;
+            RecalboxRelease = new ObservableCollection<string>();
             foreach (var release in _releases)
             {
-                if((release.Prerelease && beta) || (!release.Prerelease))
-                    RecalboxRelease.Add(release);
+                if ((release.Prerelease && beta) || (!release.Prerelease))
+                {
+                    RecalboxRelease.Add(release.Name);
+                }
+                   
             }
             
         }

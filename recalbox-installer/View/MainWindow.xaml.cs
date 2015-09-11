@@ -8,13 +8,20 @@ namespace recalbox_installer.View
     /// </summary>
     public partial class MainWindow : Window
     {
-       
+        private RecalboxReleaseViewModel _recalboxReleaseViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
-            
-            GridStepOne.DataContext = new RecalboxReleaseViewModel();
+
+            _recalboxReleaseViewModel = new RecalboxReleaseViewModel();
+            GridStepOne.DataContext = _recalboxReleaseViewModel;
             GridStepTwo.DataContext = new DriveManagerViewModel();
+        }
+
+        private void checkBoxBeta_Checked(object sender, RoutedEventArgs e)
+        {
+            _recalboxReleaseViewModel.UpdateListRelease(checkBoxBeta.IsChecked.Value);
         }
     }
 }
