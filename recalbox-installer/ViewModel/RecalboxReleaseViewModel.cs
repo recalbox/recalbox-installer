@@ -45,10 +45,25 @@ namespace recalbox_installer.ViewModel
 
         private void GetReleaseFromGithub()
         {
+
+            // Work but dirty...
+            /*
+            using (WebClient client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.UserAgent] = "recalboxInstaller";
+                client.Headers[HttpRequestHeader.Accept] = "application/json";
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                var json = client.DownloadString(@"https://api.github.com/repos/digitalLumberjack/recalbox-os/releases");
+                var test = json;
+             
+            }*/
+         
+
+            // Don't work but I follow doc
             var client = new GitHubClient(new ProductHeaderValue("recalboxInstaller"));
-            var releases = client.Release.GetAll("digitalLumberjack", "recalbox-os").GetAwaiter().GetResult();
-            //client.Release.GetAll("digitalLumberjack", "recalbox-os") += new Task<IReadOnlyList<Release>>(UpdateListRelease
+            var releases = client.Release.GetAll("digitalLumberjack", "recalbox-os").Result;
             _releases = new List<Release>(releases);
+            
             UpdateListRelease(false);
 
         }
