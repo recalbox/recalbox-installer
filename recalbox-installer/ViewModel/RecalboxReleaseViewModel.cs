@@ -71,7 +71,7 @@ namespace recalbox_installer.ViewModel
 
         public void UpdateListRelease(bool beta)
         {
-            RecalboxRelease = null;
+
             RecalboxRelease = new ObservableCollection<string>();
             foreach (var release in _releases)
             {

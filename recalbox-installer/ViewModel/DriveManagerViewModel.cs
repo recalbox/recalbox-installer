@@ -15,12 +15,14 @@ namespace recalbox_installer.ViewModel
     class DriveManagerViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<string> _observableCollectionDriveLetter;
-
+        private Thread _threadUpdate;
+        private bool _stopThread; 
         public DriveManagerViewModel()
         {
+            _stopThread = false;
             // _observableCollectionDriveLetter = new ObservableCollection<string>(DriveManager.GetAllDrive());
-            Thread threadUpdate = new Thread(this.UpdateDriveAvailable);
-            threadUpdate.Start();
+            _threadUpdate = new Thread(this.UpdateDriveAvailable);
+            _threadUpdate.Start();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -45,7 +47,7 @@ namespace recalbox_installer.ViewModel
         {
             List<string> listOfAvailableDrive = new List<string>();
     
-            while (true)
+            while (!_stopThread)
             {
                 if (listOfAvailableDrive.Count != DriveManager.GetAllDrive().Count)
                 {
@@ -55,6 +57,11 @@ namespace recalbox_installer.ViewModel
                 Thread.Sleep(100);
             }
 
+        }
+
+        public void StopThread()
+        {
+            _stopThread = true;
         }
     }
 }

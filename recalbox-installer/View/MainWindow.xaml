@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:recalbox_installer"
         mc:Ignorable="d"
-        Title="Recalbox-installer" Height="581.048" Width="525" Background="#FF34495E" ResizeMode="CanMinimize" Icon="../asset/logo.png" OpacityMask="#FF3B6B9B">
+        Title="Recalbox-installer" Height="581.048" Width="525" Background="#FF34495E" ResizeMode="CanMinimize" Icon="../asset/logo.png" OpacityMask="#FF3B6B9B" Closing="Window_Closing">
     <Grid Margin="0">
         <Grid.Background>
             <ImageBrush ImageSource="../asset/footer-stars.png"/>
@@ -16,15 +16,15 @@
         </Grid>
         <Grid x:Name="GridStepOne" Height="132" VerticalAlignment="Top" Margin="0,75,0,0">
             <TextBlock x:Name="textBlockStepOne" Margin="10,0" TextWrapping="Wrap" Text="STEP 1 : Choose a version" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <ComboBox x:Name="comboBoxReleases" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding RecalboxRelease}"/>
-            <CheckBox x:Name="checkBoxBeta" Content="Beta versions" HorizontalAlignment="Left" Margin="135,35,0,0" VerticalAlignment="Top" Height="22" Foreground="White" Checked="checkBoxBeta_Checked"/>
+            <ComboBox x:Name="comboBoxReleases" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding RecalboxRelease}"  SelectedIndex="0" />
+            <CheckBox x:Name="checkBoxBeta" Content="Beta versions" HorizontalAlignment="Left" Margin="135,35,0,0" VerticalAlignment="Top" Height="22" Foreground="White" Click="checkBoxBeta_Click"/>
             <TextBox x:Name="textBoxFileDir" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
             <TextBlock x:Name="textBlockStepOneBis" Margin="10,62,10,0" TextWrapping="Wrap" Text=" or select zip" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
             <Button x:Name="buttonSelectFile" Content="Select file" HorizontalAlignment="Left" Margin="135,97,0,0" VerticalAlignment="Top" Width="90" Height="23"/>
         </Grid>
         <Grid x:Name="GridStepTwo" Height="70" Margin="0,212,0,0" VerticalAlignment="Top">
             <TextBlock x:Name="textBlockStepTwo" Margin="10,0" TextWrapping="Wrap" Text="STEP 2 : Choose SD Card Device" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <ComboBox x:Name="comboBoxDriveLetter" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding DriveLetter}"/>
+            <ComboBox x:Name="comboBoxDriveLetter" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding DriveLetter}" SelectedIndex="0"/>
             <TextBlock x:Name="textBlockStepTwo_Copy" Margin="10,0" TextWrapping="Wrap" Text="STEP 2 : Choose SD Card Device" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
         </Grid>
         <Grid Height="253" VerticalAlignment="Top" Margin="0,287,0,0">
