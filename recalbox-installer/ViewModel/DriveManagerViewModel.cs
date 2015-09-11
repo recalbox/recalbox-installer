@@ -17,10 +17,11 @@ namespace recalbox_installer.ViewModel
         private ObservableCollection<string> _observableCollectionDriveLetter;
         private Thread _threadUpdate;
         private bool _stopThread; 
+
+
         public DriveManagerViewModel()
         {
             _stopThread = false;
-            // _observableCollectionDriveLetter = new ObservableCollection<string>(DriveManager.GetAllDrive());
             _threadUpdate = new Thread(this.UpdateDriveAvailable);
             _threadUpdate.Start();
         }
@@ -62,6 +63,11 @@ namespace recalbox_installer.ViewModel
         public void StopThread()
         {
             _stopThread = true;
+        }
+
+        public bool FormatDrive(char letter)
+        {
+            return DriveManager.FormatDrive(letter, "RecalboxOs", "FAT32");
         }
     }
 }

@@ -18,12 +18,11 @@ namespace recalbox_installer.Model
 
                 foreach (DriveInfo d in allDrives)
                 {
-                    if (d.IsReady && d.VolumeLabel != "OS")
+                    if (d.IsReady && d.VolumeLabel != "OS" && d.Name.Remove(2) != "C:")
                     {
                         
                         string ko = d.VolumeLabel;
                         string dt = System.Convert.ToString(d.DriveType);
-                        //  comboBox1.Items.Add(d.Name.Remove(2));
                         listDriveLetter.Add(d.Name.Remove(2));
                     }
 

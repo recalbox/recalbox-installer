@@ -16,9 +16,9 @@
         </Grid>
         <Grid x:Name="GridStepOne" Height="132" VerticalAlignment="Top" Margin="0,75,0,0">
             <TextBlock x:Name="textBlockStepOne" Margin="10,0" TextWrapping="Wrap" Text="STEP 1 : Choose a version" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <ComboBox x:Name="comboBoxReleases" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding RecalboxRelease}"  SelectedIndex="0" />
+            <ComboBox x:Name="comboBoxReleases" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding RecalboxRelease}" SelectedIndex="0" />
             <CheckBox x:Name="checkBoxBeta" Content="Beta versions" HorizontalAlignment="Left" Margin="135,35,0,0" VerticalAlignment="Top" Height="22" Foreground="White" Click="checkBoxBeta_Click"/>
-            <TextBox x:Name="textBoxFileDir" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120"/>
+            <TextBox x:Name="textBoxFileDir" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120" />
             <TextBlock x:Name="textBlockStepOneBis" Margin="10,62,10,0" TextWrapping="Wrap" Text=" or select zip" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
             <Button x:Name="buttonSelectFile" Content="Select file" HorizontalAlignment="Left" Margin="135,97,0,0" VerticalAlignment="Top" Width="90" Height="23" Click="buttonSelectFile_Click"/>
         </Grid>

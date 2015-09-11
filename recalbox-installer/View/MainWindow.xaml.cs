@@ -16,6 +16,13 @@ namespace recalbox_installer.View
     {
         private RecalboxReleaseViewModel _recalboxReleaseViewModel;
         private DriveManagerViewModel _driveManagerViewModel;
+        private string _selectedItemRelease;
+        private char _selectedItemLetter;
+        private Thread _threadDownload;
+        private Thread _threadFormat;
+        private bool _downloadFinish;
+        private bool _formatFinish;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +36,7 @@ namespace recalbox_installer.View
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _threadDownload.Abort();
             _driveManagerViewModel.StopThread();
         }
 
@@ -48,22 +56,21 @@ namespace recalbox_installer.View
             if (okValue == true)
             {
                 textBoxFileDir.Text = openFileDialog.FileName;
-
             }
         }
 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
         {
-           
-            
-            Thread threadDownload = new Thread(StartDownload);
-            Thread threadFormat = new Thread(StartFormat);
+            _selectedItemRelease = comboBoxReleases.SelectedItem.ToString();
+            _selectedItemLetter = char.Parse(comboBoxDriveLetter.SelectedItem.ToString().Remove(1));
 
-            threadDownload.Start();
-          
+            _threadDownload = new Thread(StartDownload);
+            _threadFormat = new Thread(StartFormat);
+
+            _threadDownload.Start();
+            _threadFormat.Start();
+
         }
-
-
 
 
         public void DownloadZipFile(string url)
@@ -76,24 +83,32 @@ namespace recalbox_installer.View
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            progressBarDownload.Value = e.ProgressPercentage;
+            if (progressBarDownload.Dispatcher.CheckAccess())
+                progressBarDownload.Value = e.ProgressPercentage;
+
+            else
+            {
+                Action act = () => { progressBarDownload.Value = e.ProgressPercentage; };
+                progressBarDownload.Dispatcher.Invoke(act);
+            }
+           
         }
 
         private void Completed(object sender, AsyncCompletedEventArgs e)
         {
-          //  DownloadComplete = true;
-            MessageBox.Show("Download completed!");
+            _downloadFinish = true;
         }
 
         private async void StartDownload()
         {
-            await _recalboxReleaseViewModel.GetUrlWithVersionName(comboBoxReleases.SelectedItem.ToString());
+            await _recalboxReleaseViewModel.GetUrlWithVersionName(_selectedItemRelease);
             DownloadZipFile(_recalboxReleaseViewModel.DownloadLink);
         }
 
         private void StartFormat()
         {
-            throw new NotImplementedException();
+            _formatFinish = _driveManagerViewModel.FormatDrive(_selectedItemLetter);
         }
+
     }
 }

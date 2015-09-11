@@ -85,7 +85,7 @@ namespace recalbox_installer.ViewModel
             release = _releases.Find(x => x.Name == vName);
 
             var client = new GitHubClient(new ProductHeaderValue("recalboxInstaller"));
-            var assets = await client.Release.GetAllAssets("digitalLumberjack", "recalbox-os", release.Id); //GetAsset("digitalLumberjack", "recalbox-os", release.Id);
+            var assets = await client.Release.GetAllAssets("digitalLumberjack", "recalbox-os", release.Id);
 
             foreach (var releaseAsset in assets)
             {
