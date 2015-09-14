@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:recalbox_installer"
         mc:Ignorable="d"
-        Title="Recalbox-installer" Height="459.048" Width="450" Background="#FF34495E" ResizeMode="CanMinimize" Icon="../asset/logo.png" OpacityMask="#FF3B6B9B" Closing="Window_Closing">
+        Title="Recalbox-installer" Height="459.048" Width="450" Background="#FF34495E" ResizeMode="CanMinimize" Icon="../asset/recalbox_07-2.ico" OpacityMask="#FF3B6B9B" Closing="Window_Closing">
     <Grid Margin="0">
         <Grid.Background>
             <ImageBrush ImageSource="../asset/footer-stars.png"/>
