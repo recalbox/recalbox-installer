@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:recalbox_installer"
         mc:Ignorable="d"
-        Title="Recalbox-installer" Height="459.048" Width="450" Background="#FF34495E" ResizeMode="CanMinimize" Icon="../asset/recalbox_07-2.ico" OpacityMask="#FF3B6B9B" Closing="Window_Closing">
+        Title="Recalbox-installer" Height="600.048" Width="450" Background="#FF34495E" ResizeMode="CanMinimize" Icon="../asset/recalbox_07-2.ico" OpacityMask="#FF3B6B9B" Closing="Window_Closing">
     <Grid Margin="0">
         <Grid.Background>
             <ImageBrush ImageSource="../asset/footer-stars.png"/>
@@ -27,11 +27,18 @@
             <ComboBox x:Name="comboBoxDriveLetter" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding DriveLetter}" SelectedIndex="0"/>
             <TextBlock x:Name="textBlockStepTwo_Copy" Margin="10,0" TextWrapping="Wrap" Text="STEP 2 : Choose SD Card Device" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
         </Grid>
-        <Grid Margin="0,287,0,10">
+        <Grid x:Name="GridStepThree" Margin="0,287,0,0" Height="88" VerticalAlignment="Top">
             <TextBlock x:Name="textBlockStepThree" Margin="10,10,10,0" TextWrapping="Wrap" Text="STEP 3 : Launch and wait" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
             <Button x:Name="buttonStart" Content="START" Margin="10,45,10,0" VerticalAlignment="Top" Height="35" Click="buttonStart_Click"/>
-            <ProgressBar x:Name="progressBarDownload" Height="28" Margin="10,85,10,0" VerticalAlignment="Top"/>
-
+        </Grid>
+        <Grid x:Name="GridLog" Margin="10,380,10,10">
+            <Label x:Name="labelDownload" Content="Download :" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
+            <Label x:Name="labelDownloadState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,0,0,0"/>
+            <ProgressBar x:Name="progressBarDownload" Height="28" Margin="0,31,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="labelFormat" Content="Format : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,64,0,0" Foreground="White"/>
+            <Label x:Name="labelFormatState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,64,0,0"/>
+            <Label x:Name="labelUnzip" Content="Unzip : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,95,0,0" Width="57" Foreground="White"/>
+            <Label x:Name="labelUnzipState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,95,0,0" Width="57"/>
         </Grid>
 
 

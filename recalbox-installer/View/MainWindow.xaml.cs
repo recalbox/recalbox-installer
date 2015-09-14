@@ -5,9 +5,12 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 using Ionic.Zip;
 using Microsoft.Win32;
+using Octokit;
 using recalbox_installer.ViewModel;
+using Label = System.Windows.Controls.Label;
 
 namespace recalbox_installer.View
 {
@@ -67,42 +70,51 @@ namespace recalbox_installer.View
 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
         {
-            comboBoxReleases.IsEditable = false;
-            comboBoxDriveLetter.IsEditable = false;
-
-            if (
-                MessageBox.Show(
-                    "Backup all your data before formatting.\nFormatting will erase all data on the memory device.\nDo you want continue ?",
-                    "WARNING", MessageBoxButton.YesNo,MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (comboBoxDriveLetter.SelectedItem != null)
             {
-                _selectedItemRelease = comboBoxReleases.SelectedItem.ToString();
-                _selectedItemLetter = char.Parse(comboBoxDriveLetter.SelectedItem.ToString().Substring(0, 1));
-                
-
-                if (textBoxFileDir.Text == "")
+                if (
+                    MessageBox.Show(
+                        "Backup all your data before formatting.\nFormatting will erase all data on the memory device.\nDo you want continue ?",
+                        "WARNING", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    _threadDownload = new Thread(StartDownload);
-                    _threadDownload.Start();
-                }
-                else
-                {
-                    _fileToUnzip = textBoxFileDir.Text;
-                    _downloadFinish = true;
-                }
 
-                _threadFormat = new Thread(StartFormat);
-                _threadFormat.Start();
-                _threadUnzip = new Thread(UnzipFile);
-                _threadUnzip.Start();
+                    _selectedItemRelease = comboBoxReleases.SelectedItem.ToString();
 
+                    _selectedItemLetter = char.Parse(comboBoxDriveLetter.SelectedItem.ToString().Substring(0, 1));
+
+
+                    if (textBoxFileDir.Text == "")
+                    {
+                        _threadDownload = new Thread(StartDownload);
+                        _threadDownload.Start();
+                        labelDownloadState.Content = "Downloading...";
+                        labelDownloadState.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        _fileToUnzip = textBoxFileDir.Text;
+                        _downloadFinish = true;
+                    }
+
+
+                    labelFormatState.Content = "Formatting...";
+                    labelFormatState.Foreground = Brushes.Red;
+
+                    _threadFormat = new Thread(StartFormat);
+                    _threadFormat.Start();
+
+                    labelUnzipState.Content = "Waiting...";
+                    labelUnzipState.Foreground = Brushes.Red;
+
+                    _threadUnzip = new Thread(UnzipFile);
+                    _threadUnzip.Start();
+
+                }
             }
             else
             {
-                comboBoxReleases.IsEditable = true;
-                comboBoxDriveLetter.IsEditable = true;
+                MessageBox.Show("No SD Card", "No SD Card", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-
         }
 
         public void DownloadZipFile(string url)
@@ -145,7 +157,31 @@ namespace recalbox_installer.View
 
         public void UnzipFile()
         {
-            while (!_downloadFinish || !_formatFinish) Thread.Sleep(100);
+            bool ffinish = false;
+            bool dfinish = false;
+
+            while (!_downloadFinish || !_formatFinish)
+            {
+
+                if (_formatFinish && !ffinish)
+                {
+                    ffinish = true;
+                    UpdateLabel(labelFormatState, "OK", Brushes.Green);
+
+                }
+                if (_downloadFinish && !dfinish)
+                {
+                    dfinish = true;
+                    UpdateLabel(labelDownloadState, "Download complete", Brushes.Green);
+                  
+                }
+
+                Thread.Sleep(1000);
+            }
+
+            UpdateLabel(labelFormatState, "OK", Brushes.Green);
+            UpdateLabel(labelDownloadState, "Download complete", Brushes.Green);
+            UpdateLabel(labelUnzipState, "Unzip recalbox.zip to " + _selectedItemLetter + @":\", Brushes.Red);
 
             using (ZipFile zip = ZipFile.Read(_fileToUnzip))
             {
@@ -155,9 +191,30 @@ namespace recalbox_installer.View
                 }
             }
 
+            UpdateLabel(labelUnzipState, "Unzip complete", Brushes.Green);
+         
+
             MessageBox.Show(
                 "Now put your SD card in your Raspberry Pi","Work complete", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        private void UpdateLabel(Label label, string  content, SolidColorBrush colorBrush)
+        {
+            if (label.Dispatcher.CheckAccess())
+            {
+                label.Content = content;
+                label.Foreground = colorBrush;
+            }
+            else
+            {
+                Action act = () =>
+                {
+                    label.Content = content;
+                    label.Foreground = colorBrush;
+
+                };
+                label.Dispatcher.Invoke(act);
+            }
+        }
     }
 }
