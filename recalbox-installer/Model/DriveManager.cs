@@ -23,7 +23,7 @@ namespace recalbox_installer.Model
                         
                         string ko = d.VolumeLabel;
                         string dt = System.Convert.ToString(d.DriveType);
-                        listDriveLetter.Add(d.Name.Remove(2));
+                        listDriveLetter.Add(d.Name + d.VolumeLabel);
                     }
 
                 }

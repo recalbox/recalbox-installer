@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using System.Windows;
+using Ionic.Zip;
 using Microsoft.Win32;
 using recalbox_installer.ViewModel;
 
@@ -17,9 +19,11 @@ namespace recalbox_installer.View
         private RecalboxReleaseViewModel _recalboxReleaseViewModel;
         private DriveManagerViewModel _driveManagerViewModel;
         private string _selectedItemRelease;
+        private string _fileToUnzip;
         private char _selectedItemLetter;
         private Thread _threadDownload;
         private Thread _threadFormat;
+        private Thread _threadUnzip;
         private bool _downloadFinish;
         private bool _formatFinish;
 
@@ -36,13 +40,15 @@ namespace recalbox_installer.View
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _threadDownload.Abort();
+            if(_threadDownload != null)
+                _threadDownload.Abort();
             _driveManagerViewModel.StopThread();
         }
 
         private void checkBoxBeta_Click(object sender, RoutedEventArgs e)
         {
             _recalboxReleaseViewModel.UpdateListRelease(checkBoxBeta.IsChecked.Value);
+            comboBoxReleases.SelectedIndex = 0;
         }
 
         private void buttonSelectFile_Click(object sender, RoutedEventArgs e)
@@ -61,17 +67,43 @@ namespace recalbox_installer.View
 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
         {
-            _selectedItemRelease = comboBoxReleases.SelectedItem.ToString();
-            _selectedItemLetter = char.Parse(comboBoxDriveLetter.SelectedItem.ToString().Remove(1));
+            comboBoxReleases.IsEditable = false;
+            comboBoxDriveLetter.IsEditable = false;
 
-            _threadDownload = new Thread(StartDownload);
-            _threadFormat = new Thread(StartFormat);
+            if (
+                MessageBox.Show(
+                    "Backup all your data before formatting.\nFormatting will erase all data on the memory device.\nDo you want continue ?",
+                    "WARNING", MessageBoxButton.YesNo,MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                _selectedItemRelease = comboBoxReleases.SelectedItem.ToString();
+                _selectedItemLetter = char.Parse(comboBoxDriveLetter.SelectedItem.ToString().Substring(0, 1));
+                
 
-            _threadDownload.Start();
-            _threadFormat.Start();
+                if (textBoxFileDir.Text == "")
+                {
+                    _threadDownload = new Thread(StartDownload);
+                    _threadDownload.Start();
+                }
+                else
+                {
+                    _fileToUnzip = textBoxFileDir.Text;
+                    _downloadFinish = true;
+                }
+
+                _threadFormat = new Thread(StartFormat);
+                _threadFormat.Start();
+                _threadUnzip = new Thread(UnzipFile);
+                _threadUnzip.Start();
+
+            }
+            else
+            {
+                comboBoxReleases.IsEditable = true;
+                comboBoxDriveLetter.IsEditable = true;
+            }
+
 
         }
-
 
         public void DownloadZipFile(string url)
         {
@@ -97,6 +129,7 @@ namespace recalbox_installer.View
         private void Completed(object sender, AsyncCompletedEventArgs e)
         {
             _downloadFinish = true;
+            _fileToUnzip = Path.GetTempPath() + "recalbox.zip";
         }
 
         private async void StartDownload()
@@ -108,6 +141,22 @@ namespace recalbox_installer.View
         private void StartFormat()
         {
             _formatFinish = _driveManagerViewModel.FormatDrive(_selectedItemLetter);
+        }
+
+        public void UnzipFile()
+        {
+            while (!_downloadFinish || !_formatFinish) Thread.Sleep(100);
+
+            using (ZipFile zip = ZipFile.Read(_fileToUnzip))
+            {
+                foreach (ZipEntry file in zip)
+                {
+                    file.Extract(_selectedItemLetter + @":\", ExtractExistingFileAction.OverwriteSilently);
+                }
+            }
+
+            MessageBox.Show(
+                "Now put your SD card in your Raspberry Pi","Work complete", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
     }
