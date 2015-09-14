@@ -89,6 +89,7 @@ namespace recalbox_installer.View
                         _threadDownload.Start();
                         labelDownloadState.Content = "Downloading...";
                         labelDownloadState.Foreground = Brushes.Red;
+                        _threadDownload.Priority = ThreadPriority.Highest;
                     }
                     else
                     {

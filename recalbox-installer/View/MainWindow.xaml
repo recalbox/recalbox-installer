@@ -33,12 +33,12 @@
         </Grid>
         <Grid x:Name="GridLog" Margin="10,380,10,10">
             <Label x:Name="labelDownload" Content="Download :" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
-            <Label x:Name="labelDownloadState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,0,0,0"/>
+            <Label x:Name="labelDownloadState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,0,0,0" Width="345"/>
             <ProgressBar x:Name="progressBarDownload" Height="28" Margin="0,31,0,0" VerticalAlignment="Top"/>
             <Label x:Name="labelFormat" Content="Format : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,64,0,0" Foreground="White"/>
-            <Label x:Name="labelFormatState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,64,0,0"/>
+            <Label x:Name="labelFormatState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,64,0,0" Width="345"/>
             <Label x:Name="labelUnzip" Content="Unzip : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,95,0,0" Width="57" Foreground="White"/>
-            <Label x:Name="labelUnzipState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,95,0,0" Width="57"/>
+            <Label x:Name="labelUnzipState" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="69,95,0,0" Width="345"/>
         </Grid>
 
 
