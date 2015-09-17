@@ -115,6 +115,7 @@ namespace recalbox_installer.View
         private void Completed(object sender, AsyncCompletedEventArgs e)
         {
             _downloadFinish = true;
+            UpdateLabel(labelDownloadState, "Download complete", Brushes.Green);
             _fileToUnzip = Path.GetTempPath() + "recalbox.zip";
         }
 
