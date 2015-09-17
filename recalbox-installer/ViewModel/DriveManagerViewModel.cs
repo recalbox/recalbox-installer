@@ -69,5 +69,10 @@ namespace recalbox_installer.ViewModel
         {
             return DriveManager.FormatDrive(letter, "RecalboxOs", "FAT32");
         }
+
+        public bool CheckDrive(string driveLetter)
+        {
+            return DriveManager.IsFat32(driveLetter);
+        }
     }
 }

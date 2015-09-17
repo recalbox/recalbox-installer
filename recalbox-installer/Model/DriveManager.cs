@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace recalbox_installer.Model
 {
@@ -28,12 +29,30 @@ namespace recalbox_installer.Model
 
                 }
             }
-            catch {/* MessageBox.Show("Error Fetching Drive Info", "Error");*/ }
+            catch { MessageBox.Show("Error Fetching Drive Info", "Error"); }
             return listDriveLetter;
         }
 
+        public static bool IsFat32(string driveLetter)
+        {
+            try
+            {
+                DriveInfo[] allDrives = DriveInfo.GetDrives();
 
-      //  Read more: http://buffernow.com/format-drive-using-c/#ixzz3lGbOpBso
+                foreach (DriveInfo d in allDrives)
+                {
+                    if (d.Name.Substring(0,1) == driveLetter)
+                    {
+                        if (d.DriveFormat == "FAT32")
+                            return true;
+                    }
+
+                }
+            }
+            catch { MessageBox.Show("Error Fetching Drive Info", "Error"); }
+
+            return false;
+        }   
 
 
         #region SetLabel

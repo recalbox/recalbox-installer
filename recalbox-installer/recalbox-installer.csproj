@@ -87,7 +87,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\DriveManager.cs" />
-    <Compile Include="Model\RecalboxRelease.cs" />
     <Compile Include="ViewModel\DriveManagerViewModel.cs" />
     <Compile Include="ViewModel\RecalboxReleaseViewModel.cs" />
   </ItemGroup>

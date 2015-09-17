@@ -15,21 +15,23 @@
             <TextBlock x:Name="textBlockTitle" Margin="65,10,10,0" TextWrapping="Wrap" Text="Recalbox - SD Format - Downloader" VerticalAlignment="Top" Height="50" Foreground="White" TextAlignment="Center" FontSize="21.333"/>
         </Grid>
         <Grid x:Name="GridStepOne" Height="132" VerticalAlignment="Top" Margin="0,75,0,0">
-            <TextBlock x:Name="textBlockStepOne" Margin="10,0" TextWrapping="Wrap" Text="STEP 1 : Choose a version" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
+            <TextBlock x:Name="textBlockStepOne" Margin="10,0" TextWrapping="Wrap" Text="Download a version" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
             <ComboBox x:Name="comboBoxReleases" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="185" ItemsSource="{Binding RecalboxRelease}" SelectedIndex="0" />
-            <CheckBox x:Name="checkBoxBeta" Content="Beta versions" HorizontalAlignment="Left" Margin="200,35,0,0" VerticalAlignment="Top" Height="22" Foreground="White" Click="checkBoxBeta_Click"/>
+            <CheckBox x:Name="checkBoxBeta" Content="Beta versions" HorizontalAlignment="Left" Margin="308,40,0,0" VerticalAlignment="Top" Height="22" Foreground="White" Click="checkBoxBeta_Click"/>
             <TextBox x:Name="textBoxFileDir" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="185" />
-            <TextBlock x:Name="textBlockStepOneBis" Margin="10,62,10,0" TextWrapping="Wrap" Text=" or select zip" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <Button x:Name="buttonSelectFile" Content="Select file" HorizontalAlignment="Left" Margin="200,97,0,0" VerticalAlignment="Top" Width="90" Height="23" Click="buttonSelectFile_Click"/>
+            <TextBlock x:Name="textBlockStepOneBis" Margin="10,62,10,0" TextWrapping="Wrap" Text="or select zip" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
+            <Button x:Name="buttonSelectFile" Content="Select file" HorizontalAlignment="Left" Margin="200,97,0,0" VerticalAlignment="Top" Width="103" Height="23" Click="buttonSelectFile_Click"/>
+            <Button x:Name="buttonDownload" Content="Start Download" HorizontalAlignment="Left" Margin="200,35,0,0" VerticalAlignment="Top" Width="103" Height="23" Click="buttonDownload_Click" />
         </Grid>
         <Grid x:Name="GridStepTwo" Height="70" Margin="0,212,0,0" VerticalAlignment="Top">
-            <TextBlock x:Name="textBlockStepTwo" Margin="10,0" TextWrapping="Wrap" Text="STEP 2 : Choose SD Card Device" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <ComboBox x:Name="comboBoxDriveLetter" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding DriveLetter}" SelectedIndex="0"/>
-            <TextBlock x:Name="textBlockStepTwo_Copy" Margin="10,0" TextWrapping="Wrap" Text="STEP 2 : Choose SD Card Device" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
+            <TextBlock x:Name="textBlockStepTwo" Margin="10,0" TextWrapping="Wrap" Text="Format your sd card if it's not FAT32" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
+            <ComboBox x:Name="comboBoxDriveLetter" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding DriveLetter}" SelectedIndex="0" SelectionChanged="comboBoxDriveLetter_SelectionChanged" />
+            <Button x:Name="buttonFormatDevice" Content="Need Format !" HorizontalAlignment="Left" Margin="135,34,0,0" VerticalAlignment="Top" Width="90" Height="23" Click="buttonFormatDevice_Click" />
         </Grid>
         <Grid x:Name="GridStepThree" Margin="0,287,0,0" Height="88" VerticalAlignment="Top">
-            <TextBlock x:Name="textBlockStepThree" Margin="10,10,10,0" TextWrapping="Wrap" Text="STEP 3 : Launch and wait" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333"/>
-            <Button x:Name="buttonStart" Content="START" Margin="10,45,10,0" VerticalAlignment="Top" Height="35" Click="buttonStart_Click"/>
+            <TextBlock x:Name="textBlockStepThree" Margin="10,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Foreground="White" FontSize="21.333" Text="Install on device"/>
+            <Button x:Name="buttonStart" Content="INSTALL" Margin="135,45,219,0" VerticalAlignment="Top" Width="90" Height="22" Click="buttonStart_Click"/>
+            <ComboBox x:Name="comboBoxDriveLetterInstall" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding DriveLetter}" SelectedIndex="0" SelectionChanged="comboBoxDriveLetterInstall_SelectionChanged" />
         </Grid>
         <Grid x:Name="GridLog" Margin="10,380,10,10">
             <Label x:Name="labelDownload" Content="Download :" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>

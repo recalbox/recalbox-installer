@@ -38,6 +38,7 @@ namespace recalbox_installer.View
             _driveManagerViewModel = new DriveManagerViewModel();
             GridStepOne.DataContext = _recalboxReleaseViewModel;
             GridStepTwo.DataContext = _driveManagerViewModel;
+            GridStepThree.DataContext = _driveManagerViewModel;
         }
 
 
@@ -70,52 +71,24 @@ namespace recalbox_installer.View
 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
         {
-            if (comboBoxDriveLetter.SelectedItem != null)
+            if (_formatFinish)
             {
-                if (
-                    MessageBox.Show(
-                        "Backup all your data before formatting.\nFormatting will erase all data on the memory device.\nDo you want continue ?",
-                        "WARNING", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (textBoxFileDir.Text != "")
                 {
-
-                    _selectedItemRelease = comboBoxReleases.SelectedItem.ToString();
-
-                    _selectedItemLetter = char.Parse(comboBoxDriveLetter.SelectedItem.ToString().Substring(0, 1));
-
-
-                    if (textBoxFileDir.Text == "")
-                    {
-                        _threadDownload = new Thread(StartDownload);
-                        _threadDownload.Start();
-                        labelDownloadState.Content = "Downloading...";
-                        labelDownloadState.Foreground = Brushes.Red;
-                        _threadDownload.Priority = ThreadPriority.Highest;
-                    }
-                    else
-                    {
-                        _fileToUnzip = textBoxFileDir.Text;
-                        _downloadFinish = true;
-                    }
-
-
-                    labelFormatState.Content = "Formatting...";
-                    labelFormatState.Foreground = Brushes.Red;
-
-                    _threadFormat = new Thread(StartFormat);
-                    _threadFormat.Start();
-
-                    labelUnzipState.Content = "Waiting...";
-                    labelUnzipState.Foreground = Brushes.Red;
-
-                    _threadUnzip = new Thread(UnzipFile);
-                    _threadUnzip.Start();
-
+                    _fileToUnzip = textBoxFileDir.Text;
+                    _downloadFinish = true;
                 }
+
+                labelUnzipState.Content = "Waiting for download...";
+                labelUnzipState.Foreground = Brushes.Red;
+
+                _threadUnzip = new Thread(UnzipFile);
+                _threadUnzip.Start();
             }
             else
-            {
-                MessageBox.Show("No SD Card", "No SD Card", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                MessageBox.Show("You must format your SDCARD to FAT32 filesystem", "Format your SD card",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+
         }
 
         public void DownloadZipFile(string url)
@@ -158,25 +131,8 @@ namespace recalbox_installer.View
 
         public void UnzipFile()
         {
-            bool ffinish = false;
-            bool dfinish = false;
-
-            while (!_downloadFinish || !_formatFinish)
+            while (!_downloadFinish)
             {
-
-                if (_formatFinish && !ffinish)
-                {
-                    ffinish = true;
-                    UpdateLabel(labelFormatState, "OK", Brushes.Green);
-
-                }
-                if (_downloadFinish && !dfinish)
-                {
-                    dfinish = true;
-                    UpdateLabel(labelDownloadState, "Download complete", Brushes.Green);
-                  
-                }
-
                 Thread.Sleep(1000);
             }
 
@@ -195,8 +151,7 @@ namespace recalbox_installer.View
             UpdateLabel(labelUnzipState, "Unzip complete", Brushes.Green);
          
 
-            MessageBox.Show(
-                "Now put your SD card in your Raspberry Pi","Work complete", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Now put your SD card in your Raspberry Pi","Work complete", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void UpdateLabel(Label label, string  content, SolidColorBrush colorBrush)
@@ -215,6 +170,68 @@ namespace recalbox_installer.View
 
                 };
                 label.Dispatcher.Invoke(act);
+            }
+        }
+
+        private void buttonFormatDevice_Click(object sender, RoutedEventArgs e)
+        {
+            string title = "WARNING";
+            string message ="Backup all your data before formatting. Formatting will erase all data on the memory device. Do you want continue ?";
+            MessageBoxResult messageBoxResult = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                _threadFormat = new Thread(StartFormat);
+                _threadFormat.Start();
+            }
+        }
+
+        private void comboBoxDriveLetter_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (comboBoxDriveLetter.SelectedItem == null) return;
+
+            if ((string) comboBoxDriveLetter.SelectedItem != "")
+            {
+                if (_driveManagerViewModel.CheckDrive(comboBoxDriveLetter.SelectedItem.ToString().Substring(0, 1)))
+                {
+                    buttonFormatDevice.Content = "Already FAT32";
+                }
+                else
+                {
+                    buttonFormatDevice.Content = "Need Format !";
+                }
+
+
+            }
+        }
+
+        private void buttonDownload_Click(object sender, RoutedEventArgs e)
+        {
+            _selectedItemRelease = (string) comboBoxReleases.SelectedItem;
+
+            _threadDownload = new Thread(StartDownload);
+            _threadDownload.Start();
+            labelDownloadState.Content = "Downloading...";
+            labelDownloadState.Foreground = Brushes.Red;
+        }
+
+        private void comboBoxDriveLetterInstall_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (comboBoxDriveLetter.SelectedItem == null) return;
+
+            if ((string)comboBoxDriveLetter.SelectedItem != "")
+            {
+                if (_driveManagerViewModel.CheckDrive(comboBoxDriveLetter.SelectedItem.ToString().Substring(0, 1)))
+                {                
+                    UpdateLabel(labelFormatState, "OK", Brushes.Green);
+                    _formatFinish = true;
+                }
+                else
+                {
+                    UpdateLabel(labelFormatState, "Need Format", Brushes.Red);
+                    _formatFinish = false;
+                }
+
+
             }
         }
     }
